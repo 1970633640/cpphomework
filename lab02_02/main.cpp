@@ -22,9 +22,9 @@ int main(int argc,char *argv[])
     }
     cout<<x<<endl;
 
- cout<<"Process returned 0 (0x0)   execution time : 0.000 s\nPress any key to continue."<<endl;
-     char cc;
-         cc=getch();
-     return 0;
+    cout<<"Process returned 0 (0x0)   execution time : 0.000 s\nPress any key to continue."<<endl;
+    char cc;
+    cc=getch();
+    return 0;
 
 }

@@ -7,7 +7,7 @@
 
 using namespace std;
 map<string,vector<int>>ans;
-KeywordsCounting(string line, vector<string> &key, int n)
+void KeywordsCounting(string line, vector<string> &key, int n)
 {
     vector<string>::iterator iter;
     for(iter=key.begin();iter!=key.end();iter++)
@@ -16,13 +16,7 @@ KeywordsCounting(string line, vector<string> &key, int n)
         {
             map<string,vector<int>>::iterator iternum;
             iternum=ans.find(*iter);
-            if(iternum==ans.end())
-            {
-                vector<int>num{n};
-                ans.insert(pair<string,vector<int>>(*iter,num));
-            }
-            else
-                (iternum->second).push_back(n);
+            (iternum->second).push_back(n);
         }
     }
 }

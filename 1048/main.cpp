@@ -19,7 +19,7 @@ int main()
         qsort(x,xx,sizeof(x[0]),cmp);
         ans=0;
         for(i=0; i<xx; i++)ans+=(xx-i-1)*x[i];
-        printf("%I64d",ans);
+        printf("%I64d\n",ans);
     }
     return 0;
 }

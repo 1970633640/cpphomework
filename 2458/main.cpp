@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <map>
 using namespace std;
-    map <int,int> data;
-    map <int,int>::iterator iter;
+map <int,int> data;
+map <int,int>::iterator iter;
 typedef struct node
 {
     node * left;
@@ -30,43 +30,51 @@ void build(int L,int R,node * root)
     q->r=R;
     p->same=false;
     q->same=false;
-    if(L!=m)build(L,m,p);
-    if(m+1!=R)build(m+1,R,p);
+    if(L!=R)
+    {
+        build(L,m,p);
+        build(m+1,R,q);
+    }
 }
 
 void qindin(int L,int R,int value,node * root)
 {
     int m=(root->l+root->r)/2;
-    if(L==root->l && R==root->r){root->same=true;root->value=value;}
-
+    if(L<=root->l && R>=root->r)
+    {
+        root->same=true;
+        root->value=value;
+        return;
+    }
     else
     {
-       if(L<=m &&root->left!=NULL) qindin(L,m,value,root->left);
-        if(R>=m+1&& root->right!=NULL)qindin(m+1,R,value,root->right);
+        if(L<=m ) qindin(L,R,value,root->left);
+        if(R>=m+1)qindin(L,R,value,root->right);
     }
 }
 
 void f(int L,int R,node * root)
 {
-
     if(root->same==true)
     {
-if(data.find(root->value)==data.end())data[root->value]=min(root->r,R) -max(root->l,L)+1;
-else data[root->value]=data[root->value]+min(root->r,R) -max(root->l,L)+1;
-return;
+        if(data.find(root->value)==data.end())data[root->value]=min(root->r,R) -max(root->l,L)+1;
+        else data[root->value]=data[root->value]+min(root->r,R) -max(root->l,L)+1;
+        return;
     }
-else
+    else
+    {
+        if(L<=(root->l+root->r)/2 && root->left!=NULL)f(L,R,root->left);
+        if(R>=(root->l+root->r)/2+1 && root->right!=NULL  )f(L,R,root->right);
+    }
+}
+void del(node * root)
 {
-    if(L<=(root->l+root->r)/2 && root->left!=NULL)f(L,R,root->left);
-    if(R>=(root->l+root->r)/2+1 && root->right!=NULL  )f(L,R,root->left);
+    if(root->left!=NULL){del(root->left);del(root->right);}
+    delete root;
 }
-
-
-}
-
 int main()
 {
-    int x,y,n,q,templ,tempr,temp;
+    int m,x,y,n,q,templ,tempr,temp;
 
     while(1)
     {
@@ -94,17 +102,21 @@ int main()
                 templ=i;
                 tempr=i;
                 temp=x;
+
             }
         }
         qindin(templ,tempr,temp,head);
-
         for(int i=0; i<q; ++i)
-        { data.clear();
+        {
+            data.clear();
             scanf("%d%d",&x,&y);
             f(x,y,head);
-             for(iter=data.begin();iter!=data.end();iter++)
-            printf("--%d--%d--\n",iter->first,iter->second);
+            m=0;
+            for(iter=data.begin(); iter!=data.end(); iter++)
+                if(iter->second>m)m=iter->second;
+            printf("%d\n",m);
         }
-
-    }return 0;
+        del(head);
+    }
+    return 0;
 }

@@ -69,7 +69,8 @@ void f(int L,int R,node * root)
 }
 void del(node * root)
 {
-    if(root->left!=NULL){del(root->left);del(root->right);}
+    if(root->left!=NULL)del(root->left);
+    if(root->right!=NULL)del(root->right);
     delete root;
 }
 int main()
@@ -116,7 +117,8 @@ int main()
                 if(iter->second>m)m=iter->second;
             printf("%d\n",m);
         }
-        del(head);
+       del(head);
     }
+
     return 0;
 }

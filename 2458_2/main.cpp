@@ -1,6 +1,5 @@
 #include <iostream>
 #include <stdio.h>
-#include <map>
 using namespace std;
 
 typedef struct node
@@ -8,6 +7,7 @@ typedef struct node
     node * left;
     node * right;
     int l,r;
+    int sum;
 } node;
 int data[100002];
 
@@ -22,14 +22,12 @@ void build (int L,int R,node * root)
         p->l=data[L-1]+1;
         p->r=data[(L+R)/2];
         root->left=p;
-
         node * q=new node;
         q->left=NULL;
         q->right=NULL;
         q->l=data[(L+R)/2]+1;
         q->r=data[R];
         root->right=q;
-        // printf("build %d %d %d %d\n",data[L-1]+1,data[(L+R)/2],data[(L+R)/2]+1,data[R]);
         build(L,M,p);
         build(M+1,R,q);
     }
@@ -37,13 +35,20 @@ void build (int L,int R,node * root)
     {
         root->l=data[L-1]+1;
         root->r=data[R];
-        // printf("haha %d %d\n",data[L-1]+1,data[R]);
+        root->sum=data[R]-data[L-1];  //l,r代表一段范围开头结尾是第几个数字
     }
+}
+
+int fast(node * root)  //加速，提前计算保存某范围内的最大重复数字数量
+{
+    if(root->left!=NULL)return root->sum=max(fast(root->left),fast(root->right));
+    else return root->sum;
 }
 
 int f(int L,int R,node * root)
 {
-    if(root->left==NULL)
+    if(L<=root->l && R>=root->r)return root->sum;  //可以直接用之前保存的数字
+    else if(root->left==NULL)
     {
         return min(root->r,R)-max(root->l,L)+1;
     }
@@ -51,21 +56,21 @@ int f(int L,int R,node * root)
     {
         if(L<=(root->left)->r  &&  R>=(root->right)->l  )return max(f(L,R,root->left),f(L,R,root->right));
         else if (L<=(root->left)->r    )return f(L,R,root->left);
-        else if (R>=(root->right)->l  )return f(L,R,root->right);
-        else printf("angry!\n");
+        else return f(L,R,root->right);
     }
 }
 
-void del(node * root)
+
+void del(node * root)  //节约内存防止重复申请浪费
 {
     if(root->left!=NULL)del(root->left);
     if(root->right!=NULL)del(root->right);
     delete root;
 }
+
 int main()
 {
     int x,y,n,q,tempr,temp;
-
     while(1)
     {
         scanf("%d",&n);
@@ -94,13 +99,13 @@ int main()
         }
         data[c]=tempr;
         build(1,c,head);
+        fast(head);
         for(int i=0; i<q; ++i)
         {
             scanf("%d%d",&x,&y);
             printf("%d\n",f(x,y,head));
         }
-    //    del(head);
+        del(head);
     }
-
     return 0;
 }

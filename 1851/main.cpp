@@ -1,33 +1,48 @@
 #include <iostream>
-
+#include <stdio.h>
 using namespace std;
-
+const int modulo= 98765431;
+int c[50001];
+long long reduce(long long x, long long n, int modulo)
+{
+    long long ans;
+    if(n == 0)
+        return 1;
+    if(n == 1)
+        return x % modulo;
+    ans=reduce(x, n>>1,modulo);
+    ans=ans * ans % modulo;
+    if(n & 1)
+        ans=ans * x % modulo;
+    return ans;
+}
+long long f(int n, int t)
+{
+    long long ans;
+    long long a=reduce(n-1, t,modulo);
+    long long b=reduce(n, modulo - 2,modulo);
+    if(t & 1)
+        ans=((1+a) * b) % modulo;
+    else
+        ans=((-1+a) * b) % modulo;
+    return ans;
+}
 int main()
 {
-    long long int x,x1,x2;
-    int cows,cow[50000],n,i;
-    cin>>cows>>n;
-    for(i=0; i<cows; i++)cin>>cow[i];
-    x1=0;
-    x2=1;
-    for(i=1; i<n; i++)
+    int n, t;
+    scanf("%d%d", &n, &t);
+    long long sum=0;
+    for(int i=1; i <= n; i++)
     {
-        x=(2*x1+x2)%987654321;    //cout<<x<<"-";
-        x1=x2;
-        x2=x;
+        scanf("%d", &c[i]);
+        sum=(sum+c[i]) % modulo;
     }
-    if (n % 2 !=0)
-    {
-        long long int sum=0;
-        for(i=0; i<cows; i++)sum+=(x*cow[i]);
-        for(i=0; i<cows; i++)cout<<(sum-cow[i])%987654321<<endl;
-    }
+    long long ans=f(n, t) * sum % modulo;
+    if(t%2!=0)
+        for(int i=1; i <= n; i++)
+            printf("%I64d\n", (ans+modulo - c[i]) % modulo);
     else
-    {
-        long long int sum=0;
-        for(i=0; i<cows; i++)sum+=(x*cow[i]);
-        for(i=0; i<cows; i++)cout<<(sum+cow[i])%987654321<<endl;
-
-    }
+        for(int i=1; i <= n; i++)
+            printf("%I64d\n", (ans+c[i]) % modulo) ;
     return 0;
 }

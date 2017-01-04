@@ -14,7 +14,7 @@ bool find(int c)
         if(!vis[i] && x[c][i])
         {
             vis[i]=1;
-            if(link[i]==-1 || find(i))
+            if(link[i]==-1 || find(link[i]))
             {
                 link[i]=c;
                 return true;

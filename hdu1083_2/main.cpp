@@ -17,11 +17,15 @@ const int maxn = 1000;
 int g[maxn][maxn], used[maxn], link[maxn];
 int nx, ny;
 
-bool dfs (int u) {
-    for (int v = 1; v <= ny; v++) {
-        if (g[u][v] && !used[v]) {
+bool dfs (int u)
+{
+    for (int v = 1; v <= ny; v++)
+    {
+        if (g[u][v] && !used[v])
+        {
             used[v] = 1;
-            if (link[v] == -1 || dfs (link[v])) {
+            if (link[v] == -1 || dfs (link[v]))
+            {
                 link[v] = u;
                 return true;
             }
@@ -30,10 +34,12 @@ bool dfs (int u) {
     return false;
 }
 
-int maxmatch () {
+int maxmatch ()
+{
     int res = 0;
     memset (link, -1, sizeof (link));
-    for (int i = 1; i <= nx; i++) {
+    for (int i = 1; i <= nx; i++)
+    {
         memset (used, 0, sizeof (used));
         if (dfs (i)) res++;
     }
@@ -46,13 +52,16 @@ int main()
     //freopen("D:\\Test_out.txt", "w", stdout);
     int T;
     scanf ("%d", &T);
-    while (T--) {
+    while (T--)
+    {
         scanf ("%d%d", &nx, &ny);
         memset (g, 0, sizeof (g));
-        for (int i = 1; i <= nx; i++) {
+        for (int i = 1; i <= nx; i++)
+        {
             int n;
             scanf ("%d", &n);
-            for (int j = 0; j < n; j++) {
+            for (int j = 0; j < n; j++)
+            {
                 int a;
                 scanf ("%d", &a);
                 g[i][a] = 1;
